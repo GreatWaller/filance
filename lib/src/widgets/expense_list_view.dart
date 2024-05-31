@@ -14,7 +14,18 @@ class ExpenseList extends StatelessWidget {
         return Card(
           margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: ListTile(
-            leading: Icon(expense.category.icon),
+            leading: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(expense.category.icon),
+                Text(
+                  expense.isIncome ? '收入' : '支出',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: expense.isIncome ? Colors.green : Colors.red),
+                ),
+              ],
+            ),
             title: Text('\$${expense.amount.toStringAsFixed(2)}'),
             // subtitle: Text(
             //   '${expense.date.toLocal().toString().split(' ')[0]}',

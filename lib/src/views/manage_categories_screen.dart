@@ -14,11 +14,16 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> {
   final _formKey = GlobalKey<FormState>();
   String _name = '';
   IconData _icon = Icons.category;
+  bool _isIncomeCategory = false;
 
   void _submitData() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      final newCategory = ExpenseCategory(name: _name, icon: _icon);
+      final newCategory = ExpenseCategory(
+        name: _name,
+        icon: _icon,
+        isIncomeCategory: _isIncomeCategory,
+      );
       Provider.of<ExpenseProvider>(context, listen: false)
           .addCategory(newCategory);
       // Navigator.of(context).pop();
@@ -59,6 +64,8 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> {
                 return ListTile(
                   leading: Icon(category.icon),
                   title: Text(category.name),
+                  subtitle:
+                      Text(category.isIncomeCategory ? 'Income' : 'Expense'),
                   trailing: IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
@@ -88,18 +95,6 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> {
                       _name = value!;
                     },
                   ),
-                  // TextFormField(
-                  //   decoration: InputDecoration(labelText: 'Icon'),
-                  //   validator: (value) {
-                  //     if (value!.isEmpty) {
-                  //       return 'Please enter an icon';
-                  //     }
-                  //     return null;
-                  //   },
-                  //   onSaved: (value) {
-                  //     _icon = value!;
-                  //   },
-                  // ),
                   SizedBox(height: 10),
                   Row(
                     children: [
@@ -109,6 +104,15 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> {
                       ),
                       Text('Select Icon'),
                     ],
+                  ),
+                  SwitchListTile(
+                    title: Text('Income Category'),
+                    value: _isIncomeCategory,
+                    onChanged: (value) {
+                      setState(() {
+                        _isIncomeCategory = value;
+                      });
+                    },
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(

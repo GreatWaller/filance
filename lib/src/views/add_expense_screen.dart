@@ -16,6 +16,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   double _amount = 0.0;
   DateTime _selectedDate = DateTime.now();
   ExpenseCategory? _selectedCategory;
+  bool _isIncome = false;
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         amount: _amount,
         date: _selectedDate,
         category: _selectedCategory!,
+        isIncome: _isIncome,
       );
       Provider.of<ExpenseProvider>(context, listen: false)
           .addExpense(newExpense);
@@ -99,6 +101,18 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   });
                 },
                 decoration: InputDecoration(labelText: 'Category'),
+              ),
+              SwitchListTile(
+                title: Text('Income'),
+                value: _isIncome,
+                onChanged: (value) {
+                  setState(() {
+                    _isIncome = value;
+                    _selectedCategory = categories.firstWhere(
+                        (cat) => cat.isIncomeCategory == _isIncome,
+                        orElse: () => categories.first);
+                  });
+                },
               ),
               SizedBox(height: 20),
               ElevatedButton(

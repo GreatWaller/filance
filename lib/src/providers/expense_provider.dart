@@ -19,23 +19,33 @@ class ExpenseProvider with ChangeNotifier {
     _database = await databaseFactoryFfi.openDatabase(
       join(await getDatabasesPath(), 'expense_tracker.db'),
       options: OpenDatabaseOptions(
-        version: 1,
+        version: 2,
         onCreate: (db, version) async {
           await db.execute(
-            "CREATE TABLE expenses(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, amount REAL, date TEXT, categoryId INTEGER)",
+            "CREATE TABLE expenses(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, amount REAL, date TEXT, categoryId INTEGER, isIncome INTEGER)",
           );
           await db.execute(
-            "CREATE TABLE categories(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, icon INTEGER, iconFontFamily TEXT)",
+            "CREATE TABLE categories(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, icon INTEGER, iconFontFamily TEXT, isIncomeCategory INTEGER)",
           );
           await db.insert('categories',
               ExpenseCategory(name: '餐饮', icon: Icons.restaurant).toMap());
           await db.insert('categories',
               ExpenseCategory(name: '购物', icon: Icons.shopping_cart).toMap());
         },
+        onUpgrade: (db, oldVersion, newVersion) async {
+          if (oldVersion < 2) {
+            await db.execute(
+              "ALTER TABLE expenses ADD COLUMN isIncome INTEGER DEFAULT 0",
+            );
+            await db.execute(
+              "ALTER TABLE categories ADD COLUMN isIncomeCategory INTEGER DEFAULT 0",
+            );
+          }
+        },
       ),
     );
+    loadCategories();
     await loadExpenses();
-    await loadCategories();
   }
 
   Future<void> loadExpenses() async {
