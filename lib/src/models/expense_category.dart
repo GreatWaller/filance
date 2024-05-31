@@ -1,0 +1,26 @@
+import 'package:flutter/material.dart';
+
+class ExpenseCategory {
+  final int? id;
+  final String name;
+  final IconData icon;
+
+  ExpenseCategory({this.id, required this.name, required this.icon});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'icon': icon.codePoint,
+      'iconFontFamily': icon.fontFamily,
+    };
+  }
+
+  factory ExpenseCategory.fromMap(Map<String, dynamic> map) {
+    return ExpenseCategory(
+      id: map['id'],
+      name: map['name'],
+      icon: IconData(map['icon'], fontFamily: map['iconFontFamily']),
+    );
+  }
+}
