@@ -13,6 +13,7 @@ import 'providers/expense_provider.dart';
 import 'views/edit_expense_screen.dart';
 import 'views/home_screen.dart';
 import 'views/manage_categories_screen.dart';
+import 'views/report_screen.dart';
 import 'widgets/fade_transition_widget.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
           GoRoute(
             path: '/a',
             builder: (BuildContext context, GoRouterState state) {
-              return const ScreenA();
+              return ReportScreen();
             },
             routes: <RouteBase>[
               // The details screen to display stacked on the inner Navigator.

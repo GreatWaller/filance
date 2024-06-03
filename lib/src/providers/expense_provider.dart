@@ -193,16 +193,33 @@ class ExpenseProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  double getMonthlyTotal(bool isIncome) {
-    final now = DateTime.now();
-    final startOfMonth = DateTime(now.year, now.month, 1);
-    final endOfMonth =
-        DateTime(now.year, now.month + 1, 1).subtract(Duration(days: 1));
+  // double getMonthlyTotal(bool isIncome) {
+  //   final now = DateTime.now();
+  //   final startOfMonth = DateTime(now.year, now.month, 1);
+  //   final endOfMonth =
+  //       DateTime(now.year, now.month + 1, 1).subtract(Duration(days: 1));
 
+  //   return _expenses.where((expense) {
+  //     return expense.isIncome == isIncome &&
+  //         expense.date.isAfter(startOfMonth.subtract(Duration(days: 1))) &&
+  //         expense.date.isBefore(endOfMonth.add(Duration(days: 1)));
+  //   }).fold(0.0, (sum, item) => sum + item.amount);
+  // }
+
+  double getMonthlyTotal(bool isIncome, [DateTime? selectedMonth]) {
+    final month = selectedMonth ?? DateTime.now();
+    return _expenses
+        .where((e) =>
+            e.isIncome == isIncome &&
+            e.date.year == month.year &&
+            e.date.month == month.month)
+        .fold(0.0, (sum, e) => sum + e.amount);
+  }
+
+  List<Expense> getExpensesForMonth(DateTime selectedMonth) {
     return _expenses.where((expense) {
-      return expense.isIncome == isIncome &&
-          expense.date.isAfter(startOfMonth.subtract(Duration(days: 1))) &&
-          expense.date.isBefore(endOfMonth.add(Duration(days: 1)));
-    }).fold(0.0, (sum, item) => sum + item.amount);
+      return expense.date.year == selectedMonth.year &&
+          expense.date.month == selectedMonth.month;
+    }).toList();
   }
 }
