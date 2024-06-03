@@ -27,7 +27,7 @@ class ExpenseList extends StatelessWidget {
                 ),
               ],
             ),
-            title: Text('\$${expense.amount.toStringAsFixed(2)}'),
+            title: Text('${expense.amount.toStringAsFixed(2)}'),
             // subtitle: Text(
             //   '${expense.date.toLocal().toString().split(' ')[0]}',
             // ),

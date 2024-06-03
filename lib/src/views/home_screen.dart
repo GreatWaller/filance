@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../widgets/expense_list_view.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final expenseProvider = Provider.of<ExpenseProvider>(context);
@@ -14,10 +16,10 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Expense Tracker'),
+        title: const Text('账单'),
         actions: [
           IconButton(
-            icon: Icon(Icons.category),
+            icon: const Icon(Icons.category),
             onPressed: () {
               context.go('/b/manage-categories');
             },
@@ -27,26 +29,26 @@ class HomeScreen extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Card(
-            margin: EdgeInsets.all(16),
+            margin: const EdgeInsets.all(16),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         '本月总收入',
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.green),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
-                        '\$${monthlyIncome.toStringAsFixed(2)}',
-                        style: TextStyle(
+                        '${monthlyIncome.toStringAsFixed(2)}',
+                        style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.green),
@@ -54,19 +56,19 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         '本月总支出',
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.red),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
-                        '\$${monthlyExpense.toStringAsFixed(2)}',
-                        style: TextStyle(
+                        '${monthlyExpense.toStringAsFixed(2)}',
+                        style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.red),
@@ -86,7 +88,7 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           context.go('/b/add');
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

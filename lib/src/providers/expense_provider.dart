@@ -222,4 +222,8 @@ class ExpenseProvider with ChangeNotifier {
           expense.date.month == selectedMonth.month;
     }).toList();
   }
+
+  List<Expense> getExpensesForYear(int year) {
+    return _expenses.where((expense) => expense.date.year == year).toList();
+  }
 }

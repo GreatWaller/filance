@@ -111,7 +111,7 @@ class MyApp extends StatelessWidget {
           GoRoute(
             path: '/c',
             builder: (BuildContext context, GoRouterState state) {
-              return const ScreenA();
+              return const ScreenC();
             },
             routes: <RouteBase>[
               // The details screen to display stacked on the inner Navigator.
@@ -284,7 +284,7 @@ class ScreenC extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            const Text('Screen C'),
+            const Text('广告招商'),
             TextButton(
               onPressed: () {
                 GoRouter.of(context).go('/c/details');
