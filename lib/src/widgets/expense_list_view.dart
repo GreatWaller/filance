@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/expense_provider.dart';
 
@@ -32,13 +33,27 @@ class ExpenseList extends StatelessWidget {
             // ),
             subtitle: Text(
                 '${expense.date.toLocal().toString().split(' ')[0]}  ${expense.title}'),
-            // trailing: Text(expense.date.toLocal().toString()),
-            trailing: IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                Provider.of<ExpenseProvider>(context, listen: false)
-                    .deleteExpense(expense.id!);
-              },
+
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    context.go('/b/edit', extra: expense);
+                  },
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    Provider.of<ExpenseProvider>(context, listen: false)
+                        .deleteExpense(expense.id!);
+                  },
+                ),
+              ],
             ),
           ),
         );

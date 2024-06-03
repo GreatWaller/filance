@@ -27,10 +27,71 @@ class ExpenseProvider with ChangeNotifier {
           await db.execute(
             "CREATE TABLE categories(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, icon INTEGER, iconFontFamily TEXT, isIncomeCategory INTEGER)",
           );
-          await db.insert('categories',
-              ExpenseCategory(name: '餐饮', icon: Icons.restaurant).toMap());
-          await db.insert('categories',
-              ExpenseCategory(name: '购物', icon: Icons.shopping_cart).toMap());
+          // Insert default categories
+          int foodCategoryId = await db.insert(
+              'categories',
+              ExpenseCategory(
+                      name: '餐饮',
+                      icon: Icons.restaurant,
+                      isIncomeCategory: false)
+                  .toMap());
+          int shoppingCategoryId = await db.insert(
+              'categories',
+              ExpenseCategory(
+                      name: '购物',
+                      icon: Icons.shopping_cart,
+                      isIncomeCategory: false)
+                  .toMap());
+          int salaryCategoryId = await db.insert(
+              'categories',
+              ExpenseCategory(
+                      name: '工资',
+                      icon: Icons.attach_money,
+                      isIncomeCategory: true)
+                  .toMap());
+
+          // Insert default expenses
+          await db.insert(
+              'expenses',
+              Expense(
+                      title: '午餐',
+                      amount: 50.0,
+                      date: DateTime.now(),
+                      category: ExpenseCategory(
+                          id: foodCategoryId,
+                          name: '餐饮',
+                          icon: Icons.restaurant,
+                          isIncomeCategory: false),
+                      isIncome: false)
+                  .toMap());
+
+          await db.insert(
+              'expenses',
+              Expense(
+                      title: '购物',
+                      amount: 200.0,
+                      date: DateTime.now(),
+                      category: ExpenseCategory(
+                          id: shoppingCategoryId,
+                          name: '购物',
+                          icon: Icons.shopping_cart,
+                          isIncomeCategory: false),
+                      isIncome: false)
+                  .toMap());
+
+          await db.insert(
+              'expenses',
+              Expense(
+                      title: '工资',
+                      amount: 5000.0,
+                      date: DateTime.now(),
+                      category: ExpenseCategory(
+                          id: salaryCategoryId,
+                          name: '工资',
+                          icon: Icons.attach_money,
+                          isIncomeCategory: true),
+                      isIncome: true)
+                  .toMap());
         },
         onUpgrade: (db, oldVersion, newVersion) async {
           if (oldVersion < 2) {
@@ -76,6 +137,20 @@ class ExpenseProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateExpense(Expense expense) async {
+    await _database.update(
+      'expenses',
+      expense.toMap(),
+      where: 'id = ?',
+      whereArgs: [expense.id],
+    );
+    final index = _expenses.indexWhere((e) => e.id == expense.id);
+    if (index != -1) {
+      _expenses[index] = expense;
+      notifyListeners();
+    }
+  }
+
   Future<void> deleteExpense(int id) async {
     await _database.delete(
       'expenses',
@@ -116,5 +191,18 @@ class ExpenseProvider with ChangeNotifier {
     );
     _categories.removeWhere((category) => category.id == id);
     notifyListeners();
+  }
+
+  double getMonthlyTotal(bool isIncome) {
+    final now = DateTime.now();
+    final startOfMonth = DateTime(now.year, now.month, 1);
+    final endOfMonth =
+        DateTime(now.year, now.month + 1, 1).subtract(Duration(days: 1));
+
+    return _expenses.where((expense) {
+      return expense.isIncome == isIncome &&
+          expense.date.isAfter(startOfMonth.subtract(Duration(days: 1))) &&
+          expense.date.isBefore(endOfMonth.add(Duration(days: 1)));
+    }).fold(0.0, (sum, item) => sum + item.amount);
   }
 }

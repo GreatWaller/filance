@@ -8,8 +8,10 @@ import 'package:go_router/go_router.dart';
 import 'package:adaptive_navigation/adaptive_navigation.dart';
 import 'package:provider/provider.dart';
 
+import 'models/expense.dart';
 import 'providers/expense_provider.dart';
-import 'views/home_view.dart';
+import 'views/edit_expense_screen.dart';
+import 'views/home_screen.dart';
 import 'views/manage_categories_screen.dart';
 import 'widgets/fade_transition_widget.dart';
 
@@ -88,6 +90,13 @@ class MyApp extends StatelessWidget {
                 parentNavigatorKey: _rootNavigatorKey,
                 builder: (BuildContext context, GoRouterState state) {
                   return AddExpenseScreen();
+                },
+              ),
+              GoRoute(
+                path: 'edit',
+                builder: (context, state) {
+                  final expense = state.extra as Expense;
+                  return EditExpenseScreen(expense);
                 },
               ),
               GoRoute(
