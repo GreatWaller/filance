@@ -284,7 +284,7 @@ class ScreenC extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            const Text('广告招商'),
+            const Text('敬请期待'),
             TextButton(
               onPressed: () {
                 GoRouter.of(context).go('/c/details');

@@ -162,7 +162,8 @@ class _ReportScreenState extends State<ReportScreen>
           SizedBox(height: 20),
           // _buildLineChart('年度收入', incomeData, Colors.green),
           // SizedBox(height: 20),
-          _buildLineChart('年度支出', expenseData, Colors.red),
+          _buildLineChart(
+              '年度收支', [expenseData, incomeData], [Colors.red, Colors.green]),
           const SizedBox(height: 20),
           _buildYearlyExpenseList(expenses),
         ],
@@ -374,7 +375,8 @@ class _ReportScreenState extends State<ReportScreen>
         .toList();
   }
 
-  Widget _buildLineChart(String title, List<FlSpot> data, Color color) {
+  Widget _buildLineChart(
+      String title, List<List<FlSpot>> data, List<Color> color) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -442,16 +444,37 @@ class _ReportScreenState extends State<ReportScreen>
                   minX: 1,
                   maxX: 12,
                   minY: 0,
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: data,
+                  // lineBarsData: [
+                  //   LineChartBarData(
+                  //     spots: data[0],
+                  //     isCurved: true,
+                  //     color: color[0],
+                  //     barWidth: 4,
+                  //     belowBarData: BarAreaData(
+                  //         show: true, color: color[0].withOpacity(0.3)),
+                  //   ),
+                  //   LineChartBarData(
+                  //     spots: data[1],
+                  //     isCurved: true,
+                  //     color: color[1],
+                  //     barWidth: 4,
+                  //     belowBarData: BarAreaData(
+                  //         show: true, color: color[1].withOpacity(0.3)),
+                  //   ),
+                  // ],
+                  lineBarsData: data.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final spots = entry.value;
+                    return LineChartBarData(
+                      spots: spots,
                       isCurved: true,
-                      color: color,
+                      color: color[index % color.length],
                       barWidth: 4,
                       belowBarData: BarAreaData(
-                          show: true, color: color.withOpacity(0.3)),
-                    ),
-                  ],
+                          show: true,
+                          color: color[index % color.length].withOpacity(0.3)),
+                    );
+                  }).toList(),
                 ),
               ),
             ),
